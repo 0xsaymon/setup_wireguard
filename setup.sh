@@ -43,6 +43,6 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 EOF
 
-echo "✅ Success! Configs saved у ~/wireguard-setup/"
+echo "✅ Success! Configs saved to ~/wireguard-setup/"
 echo "➡️ client.conf can be used with WireGuard."
 echo "➡️ Now run VPN using: sudo wg-quick up wg0"

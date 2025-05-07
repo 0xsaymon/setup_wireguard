@@ -6,6 +6,7 @@ sudo sysctl -p
 sudo wg-quick up wg0
 sudo systemctl enable wg-quick@wg0
 
-CONFIG=$(cat /etc/wireguard/wg0.conf)
+CONFIG=$(cat ~/wireguard-setup/client.conf)
 echo "client config:"
+echo ""
 echo "$CONFIG"
