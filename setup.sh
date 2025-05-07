@@ -11,7 +11,7 @@ wg genkey | tee server_private.key | wg pubkey > server_public.key
 wg genkey | tee client_private.key | wg pubkey > client_public.key
 
 # 4. Determine the public IP of the VPS
-PUBLIC_IP=$(curl -s ifconfig.me)
+PUBLIC_IP=$(hostname -I | cut -d' ' -f1)
 
 # 5. Create the server configuration /etc/wireguard/wg0.conf
 sudo mkdir -p /etc/wireguard
