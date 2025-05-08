@@ -1,21 +1,27 @@
 #!/bin/bash
 
-# 1. create dir
+# WireGuard VPN Setup Script
+
+# install WireGuard
+sudo apt update
+sudo apt install wireguard -y
+
+# create dir
 mkdir -p ~/wireguard-setup
 cd ~/wireguard-setup
 
-# 2. generate new server keys
-wg genkey | tee server_private.key | wg pubkey > server_public.key
+# generate new server keys
+wg genkey | tee server_private.key | wg pubkey >server_public.key
 
-# 3. generate client keys
-wg genkey | tee client_private.key | wg pubkey > client_public.key
+# generate client keys
+wg genkey | tee client_private.key | wg pubkey >client_public.key
 
-# 4. Determine the public IP of the VPS
+# Determine the public IP of the VPS
 PUBLIC_IP=$(hostname -I | cut -d' ' -f1)
 
-# 5. Create the server configuration /etc/wireguard/wg0.conf
+# Create the server configuration /etc/wireguard/wg0.conf
 sudo mkdir -p /etc/wireguard
-sudo tee /etc/wireguard/wg0.conf > /dev/null <<EOF
+sudo tee /etc/wireguard/wg0.conf >/dev/null <<EOF
 [Interface]
 Address = 10.0.0.1/24
 PrivateKey = $(cat server_private.key)
@@ -29,8 +35,8 @@ PublicKey = $(cat client_public.key)
 AllowedIPs = 10.0.0.2/32
 EOF
 
-# 6. Create the ready-to-use client configuration client.conf
-tee client.conf > /dev/null <<EOF
+# Create the ready-to-use client configuration client.conf
+tee client.conf >/dev/null <<EOF
 [Interface]
 PrivateKey = $(cat client_private.key)
 Address = 10.0.0.2/24
@@ -44,5 +50,17 @@ PersistentKeepalive = 25
 EOF
 
 echo "✅ Success! Configs saved to ~/wireguard-setup/"
-echo "➡️ client.conf can be used with WireGuard."
-echo "➡️ Now run VPN using: sudo wg-quick up wg0"
+
+# Enable IP forwarding
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
+# Start WireGuard
+sudo wg-quick up wg0
+sudo systemctl enable wg-quick@wg0
+
+# Display the client configuration
+CONFIG=$(cat ~/wireguard-setup/client.conf)
+echo "client config:"
+echo ""
+echo "$CONFIG"
