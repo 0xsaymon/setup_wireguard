@@ -66,10 +66,9 @@ echo "🔒 Starting WireGuard..."
 sudo wg-quick up wg0
 sudo systemctl enable wg-quick@wg0
 
-echo "📝 Client configuration:"
-echo ""
 # Display the client configuration
 CONFIG=$(cat ~/setup_wireguard/dist/client.conf)
-echo "client config:"
+echo ""
+echo "📝 Client configuration:"
 echo ""
 echo "$CONFIG"
