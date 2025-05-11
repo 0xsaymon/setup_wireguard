@@ -7,8 +7,8 @@ sudo apt update
 sudo apt install wireguard -y
 
 # create dir
-mkdir -p ~/wireguard-setup
-cd ~/wireguard-setup
+mkdir -p ./setup
+cd ./setup
 
 # generate new server keys
 wg genkey | tee server_private.key | wg pubkey >server_public.key
@@ -49,7 +49,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 EOF
 
-echo "✅ Success! Configs saved to ~/wireguard-setup/"
+echo "✅ Success! Configs saved to ~/setup_wireguard/setup/"
 
 # Enable IP forwarding
 echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
@@ -60,7 +60,7 @@ sudo wg-quick up wg0
 sudo systemctl enable wg-quick@wg0
 
 # Display the client configuration
-CONFIG=$(cat ~/wireguard-setup/client.conf)
+CONFIG=$(cat ~/setup_wireguard/setup/client.conf)
 echo "client config:"
 echo ""
 echo "$CONFIG"
